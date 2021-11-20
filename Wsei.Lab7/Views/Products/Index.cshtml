@@ -2,6 +2,8 @@
 
 <h1>Adding a new product</h1>
 
+<alert color="warning">A new update</alert>
+
 <form method="POST" asp-action="Add">
     <div class="form-group">
         <label asp-for="Name">Item name</label>
@@ -22,3 +24,5 @@
         <input type="submit" value="Add new item" />
     </div>
 </form>
+
+<partial name="_MyCustomPartialView" model="5" />

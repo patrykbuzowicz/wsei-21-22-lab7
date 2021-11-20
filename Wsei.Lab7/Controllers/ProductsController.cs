@@ -58,6 +58,5 @@ namespace Wsei.Lab7.Controllers
 
             return View(products);
         }
-
     }
 }
