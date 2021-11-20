@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -42,5 +43,21 @@ namespace Wsei.Lab7.Controllers
             };
             return View(viewModel);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> List(string name)
+        {
+            IQueryable<ProductEntity> productsQuery = _dbContext.Products;
+
+            if (!string.IsNullOrEmpty(name))
+            {
+                productsQuery = productsQuery.Where(x => x.Name.Contains(name));
+            }
+
+            var products = await productsQuery.ToListAsync();
+
+            return View(products);
+        }
+
     }
 }
