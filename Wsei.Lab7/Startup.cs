@@ -27,13 +27,20 @@ namespace Wsei.Lab7
             services.AddControllersWithViews();
 
             services.AddDbContext<AppDbContext>(config =>
-                config.UseSqlServer(Configuration.GetConnectionString("Application"))
+                //config.UseSqlServer(Configuration.GetConnectionString("Application"))
+                config.UseSqlite("Data Source=bin/sqlitedb.db")
             );
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            using (var serviceScope = app.ApplicationServices.GetService<IServiceScopeFactory>().CreateScope())
+            {
+                var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
+                context.Database.EnsureCreated();
+            }
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();

@@ -11,6 +11,10 @@ namespace Wsei.Lab7.Database
     {
         public DbSet<ProductEntity> Products { get; set; }
 
+        public AppDbContext()
+        {
+        }
+
         public AppDbContext(DbContextOptions options)
             : base(options)
         {
