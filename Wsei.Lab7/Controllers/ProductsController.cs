@@ -7,16 +7,19 @@ using System.Threading.Tasks;
 using Wsei.Lab7.Database;
 using Wsei.Lab7.Entities;
 using Wsei.Lab7.Models;
+using Wsei.Lab7.Services;
 
 namespace Wsei.Lab7.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly AppDbContext _dbContext;
+        private readonly IProductService _productService;
 
-        public ProductsController(AppDbContext dbContext)
+        public ProductsController(AppDbContext dbContext, IProductService productService)
         {
             _dbContext = dbContext;
+            _productService = productService;
         }
 
         public IActionResult Index()
@@ -26,15 +29,7 @@ namespace Wsei.Lab7.Controllers
 
         public async Task<IActionResult> Add(ProductModel product)
         {
-            var entity = new ProductEntity
-            {
-                Name = product.Name,
-                Description = product.Description,
-                IsVisible = product.IsVisible,
-            };
-
-            await _dbContext.Products.AddAsync(entity);
-            await _dbContext.SaveChangesAsync();
+            await _productService.Add(product);
 
             var viewModel = new ProductStatsViewModel
             {
@@ -47,15 +42,7 @@ namespace Wsei.Lab7.Controllers
         [HttpGet]
         public async Task<IActionResult> List(string name)
         {
-            IQueryable<ProductEntity> productsQuery = _dbContext.Products;
-
-            if (!string.IsNullOrEmpty(name))
-            {
-                productsQuery = productsQuery.Where(x => x.Name.Contains(name));
-            }
-
-            var products = await productsQuery.ToListAsync();
-
+            var products = await _productService.GetAll(name);
             return View(products);
         }
     }

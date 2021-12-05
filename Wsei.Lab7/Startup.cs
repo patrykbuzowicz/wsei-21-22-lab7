@@ -9,6 +9,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Wsei.Lab7.Database;
+using Wsei.Lab7.Middleware;
+using Wsei.Lab7.Services;
 
 namespace Wsei.Lab7
 {
@@ -30,6 +32,9 @@ namespace Wsei.Lab7
                 //config.UseSqlServer(Configuration.GetConnectionString("Application"))
                 config.UseSqlite("Data Source=bin/sqlitedb.db")
             );
+
+            services.AddTransient<IProductService, ProductService>();
+            services.AddSingleton<IMetricsCollector, MetricsCollector>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -39,7 +44,10 @@ namespace Wsei.Lab7
             {
                 var context = serviceScope.ServiceProvider.GetRequiredService<AppDbContext>();
                 context.Database.EnsureCreated();
+                context.Database.Migrate();
             }
+
+            app.UseMiddleware<CollectMetricsMiddleware>();
 
             if (env.IsDevelopment())
             {
