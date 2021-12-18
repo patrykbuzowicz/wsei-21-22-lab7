@@ -29,8 +29,7 @@ namespace Wsei.Lab7
             services.AddControllersWithViews();
 
             services.AddDbContext<AppDbContext>(config =>
-                //config.UseSqlServer(Configuration.GetConnectionString("Application"))
-                config.UseSqlite("Data Source=bin/sqlitedb.db")
+                config.UseSqlServer(Configuration.GetConnectionString("Application"))
             );
 
             services.AddTransient<IProductService, ProductService>();
