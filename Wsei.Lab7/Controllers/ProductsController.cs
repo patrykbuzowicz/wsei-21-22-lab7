@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -11,14 +12,13 @@ using Wsei.Lab7.Services;
 
 namespace Wsei.Lab7.Controllers
 {
+    [Authorize]
     public class ProductsController : Controller
     {
-        private readonly AppDbContext _dbContext;
         private readonly IProductService _productService;
 
-        public ProductsController(AppDbContext dbContext, IProductService productService)
+        public ProductsController(IProductService productService)
         {
-            _dbContext = dbContext;
             _productService = productService;
         }
 
