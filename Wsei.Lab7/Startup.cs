@@ -10,6 +10,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Wsei.Lab7.Database;
+using Wsei.Lab7.Hubs;
 using Wsei.Lab7.Middleware;
 using Wsei.Lab7.Services;
 
@@ -37,6 +38,10 @@ namespace Wsei.Lab7
 
             services.AddTransient<IProductService, ProductService>();
             services.AddSingleton<IMetricsCollector, MetricsCollector>();
+
+            services.AddSingleton<IChatMessagesRepository, ChatMessagesRepository>();
+
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -72,6 +77,8 @@ namespace Wsei.Lab7
                     name: "default",
                     pattern: "{controller=Home}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
+
+                endpoints.MapHub<ChatHub>("/chat/hub");
             });
         }
     }
